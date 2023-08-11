@@ -15,7 +15,7 @@ export default async (req: NextApiRequest, res: NextApiResponse<Data>) => {
       message,
     }: { name: string; email: string; message: string } = req.body;
     const msg = {
-      to: "tinaloudesign@gmail.com",
+      to: "contact@uxschema.com",
       from: "contact@uxschema.com",
       subject: `${name.toUpperCase()} sent you a message`,
       text: `Email => ${email}`,
@@ -24,7 +24,11 @@ export default async (req: NextApiRequest, res: NextApiResponse<Data>) => {
     try {
       await sgMail.send(msg);
       res.status(200).json({ success: true });
-    } catch (err) {}
-    res.status(200).json({ success: false });
+    } catch (error) {
+      console.error("Error sending email:", error);
+      res.status(500).json({ success: false });
+    }
+  } else {
+    res.status(405).json({ success: false });
   }
 };

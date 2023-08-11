@@ -1,10 +1,19 @@
 import React from "react";
+import { validate } from "../utils/validate";
 
 interface TextAreaProps {
   id: string;
   name: string;
   label: string;
   placeholder: string;
+  value: string;
+  onChange: (
+    e:
+      | React.ChangeEvent<HTMLInputElement>
+      | React.ChangeEvent<HTMLTextAreaElement>
+  ) => void;
+  error: boolean;
+  errorMessage: string | undefined;
 }
 
 export default function TextArea({
@@ -12,6 +21,10 @@ export default function TextArea({
   name,
   label,
   placeholder,
+  value,
+  onChange,
+  error,
+  errorMessage = "",
   ...props
 }: TextAreaProps) {
   return (
@@ -20,6 +33,8 @@ export default function TextArea({
         {label}
       </label>
       <textarea
+        value={value}
+        onChange={onChange}
         id={id}
         name={name}
         rows={5}
@@ -27,6 +42,9 @@ export default function TextArea({
         {...props}
         className="w-full text-black placeholder-gray-400 border-indigo-400 rounded-md focus:ring-2 focus:ring-purple-400 "
       ></textarea>
+      {error ? (
+        <p className="text-sm italic text-red">*{errorMessage}</p>
+      ) : null}
     </div>
   );
 }

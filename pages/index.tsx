@@ -2,15 +2,17 @@ import React, { useState } from "react";
 import { Inter } from "next/font/google";
 import Input from "../components/Input";
 import TextArea from "../components/Textarea";
+import { validate } from "../utils/validate";
 
 const inter = Inter({ subsets: ["latin"] });
 
 export default function Home() {
-  const [values, setVaules] = useState({
+  const [values, setValues] = useState({
     name: "",
     email: "",
     message: "",
   });
+
   const [errors, setErrors] = useState<{
     name?: string;
     email?: string;
@@ -19,10 +21,10 @@ export default function Home() {
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    const errors = validate(values);
-    const isError = Object.keys(errors).length;
-    if (isError && isError > 0) {
-      setErrors(errors);
+    const validationErrors = validate(values);
+    const isError = Object.keys(validationErrors).length > 0;
+    if (isError) {
+      setErrors(validationErrors);
       return;
     }
     try {
@@ -33,22 +35,46 @@ export default function Home() {
         },
         body: JSON.stringify(values),
       });
-      if (!res.ok) {
-        setVaules({ name: "", message: "", email: "" });
+      if (res.ok) {
+        setValues({ name: "", email: "", message: "" });
       }
     } catch (error) {
       console.error(error);
     }
   };
 
+  const onChange = (
+    e:
+      | React.ChangeEvent<HTMLInputElement>
+      | React.ChangeEvent<HTMLTextAreaElement>
+  ) => {
+    setValues((prev) => ({ ...prev, [e.target.name]: e.target.value }));
+  };
+
   return (
     <div className="flex flex-col items-center justify-center w-full h-screen ">
       <h1 className="p-6 text-6xl font-bold">Get in touch</h1>
       <div className="px-3">
-        <form className="flex flex-col items-center w-full mx-auto">
+        <form
+          className="flex flex-col items-center w-full mx-auto"
+          onSubmit={handleSubmit}
+        >
           <div className="flex gap-4 row">
-            <Input id="name" name="name" placeholder="Name" label="Your Name" />
             <Input
+              error={!!errors.name}
+              errorMessage={errors.name}
+              value={values.name}
+              onChange={onChange}
+              id="name"
+              name="name"
+              placeholder="Name"
+              label="Your Name"
+            />
+            <Input
+              error={!!errors.email}
+              errorMessage={errors.email}
+              value={values.email}
+              onChange={onChange}
               id="email"
               name="email"
               placeholder="youremail@email.com"
@@ -56,6 +82,10 @@ export default function Home() {
             />
           </div>
           <TextArea
+            error={!!errors.message}
+            errorMessage={errors.message}
+            onChange={onChange}
+            value={values.message}
             id="message"
             name="message"
             placeholder="Write something here..."
