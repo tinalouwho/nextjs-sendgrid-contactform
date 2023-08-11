@@ -19,12 +19,15 @@ export default function Home() {
     message?: string;
   }>({});
 
+  const [isSubmitted, setIsSubmitted] = useState(false);
+
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     const validationErrors = validate(values);
     const isError = Object.keys(validationErrors).length > 0;
     if (isError) {
       setErrors(validationErrors);
+      setIsSubmitted(false);
       return;
     }
     try {
@@ -37,9 +40,11 @@ export default function Home() {
       });
       if (res.ok) {
         setValues({ name: "", email: "", message: "" });
+        setIsSubmitted(true);
       }
     } catch (error) {
       console.error(error);
+      setIsSubmitted(false);
     }
   };
 
@@ -55,6 +60,9 @@ export default function Home() {
     <div className="flex flex-col items-center justify-center w-full h-screen ">
       <h1 className="p-6 text-6xl font-bold">Get in touch</h1>
       <div className="px-3">
+        {isSubmitted ? (
+          <p className="text-green-600">I will be in touch soon!</p>
+        ) : null}
         <form
           className="flex flex-col items-center w-full mx-auto"
           onSubmit={handleSubmit}

@@ -18,8 +18,8 @@ export default async (req: NextApiRequest, res: NextApiResponse<Data>) => {
       to: "contact@uxschema.com",
       from: "contact@uxschema.com",
       subject: `${name.toUpperCase()} sent you a message`,
-      text: `Email => ${email}`,
-      html: `<strong>${message}</strong>`,
+      text: `Sender Email: ${email}\n\nMessage: ${message}`,
+      html: `<p><strong>Sender Email:</strong> ${email}</p><p><strong>Message:</strong> ${message}</p>`,
     };
     try {
       await sgMail.send(msg);
