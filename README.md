@@ -1,6 +1,6 @@
 This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
 
-The purpose of this repo is to create a Contact Form with front-end validation and integrates SendGrid for recienving emails containing the data and messages sent through the contact form to the owner.
+** The purpose of this project was to create a Contact Form with front-end validation and integrates SendGrid for sending emails containing the data and messages sent through the contact form to the owner. **
 
 Written in Typescript and styled with TailwindCSS.
 Other installations - Tailwind forms and email validator.
